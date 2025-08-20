@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../feature/emotion_notes/model/database/emotion_table.dart';
-import '../../feature/emotion_notes/model/database/notes_table.dart';
+import '../../feature/emotion_notes/database/emotion_table.dart';
+import '../../feature/emotion_notes/database/notes_table.dart';
 
 part 'database.g.dart';
 
