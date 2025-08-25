@@ -5,4 +5,5 @@ class Notes extends Table {
   TextColumn get title => text().withLength(min: 1, max: 100)();
   TextColumn get description => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  TextColumn get tag => text().nullable()();
 }

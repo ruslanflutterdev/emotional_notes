@@ -11,10 +11,15 @@ class NoteCreateEditViewModel extends StateNotifier<AsyncValue<void>> {
   NoteCreateEditViewModel(this._repository, this._initialNote)
     : super(const AsyncValue.data(null));
 
+  Future<List<String>> getAvailableTags() async {
+    return _repository.getAllTags();
+  }
+
   Future<void> saveNote({
     required String title,
     required String description,
     required Map<String, int> emotions,
+    required String? tag,
   }) async {
     final totalPercentage = emotions.values.fold(
       0,
@@ -24,7 +29,7 @@ class NoteCreateEditViewModel extends StateNotifier<AsyncValue<void>> {
       throw Exception('Сумма процентов должна быть равна 100');
     }
 
-    state = const AsyncValue.loading();
+    state = AsyncValue.loading();
     try {
       final emotionsCompanion = emotions.entries
           .map(
@@ -40,12 +45,14 @@ class NoteCreateEditViewModel extends StateNotifier<AsyncValue<void>> {
           id: Value(_initialNote.note.id),
           title: Value(title),
           description: Value(description),
+          tag: Value(tag),
         );
         await _repository.updateNote(noteCompanion, emotionsCompanion);
       } else {
         final noteCompanion = NotesCompanion(
           title: Value(title),
           description: Value(description),
+          tag: Value(tag),
         );
         await _repository.createNote(noteCompanion, emotionsCompanion);
       }

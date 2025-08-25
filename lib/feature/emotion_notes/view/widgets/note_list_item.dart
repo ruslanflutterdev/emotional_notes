@@ -20,9 +20,20 @@ class NoteListItem extends ConsumerWidget {
 
     return ListTile(
       title: Text(noteWithEmotions.note.title),
-
-      subtitle: Text(emotionsText),
-
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(emotionsText),
+          if (noteWithEmotions.tag != null && noteWithEmotions.tag!.isNotEmpty)
+            Padding(
+              padding: EdgeInsets.only(top: 4.0),
+              child: Text(
+                'Тег: ${noteWithEmotions.tag}',
+                style: TextStyle(fontSize: 12, color: Colors.blueGrey),
+              ),
+            ),
+        ],
+      ),
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -30,7 +41,6 @@ class NoteListItem extends ConsumerWidget {
           ),
         );
       },
-
       trailing: IconButton(
         icon: Icon(Icons.delete, color: Colors.red),
         onPressed: () async {

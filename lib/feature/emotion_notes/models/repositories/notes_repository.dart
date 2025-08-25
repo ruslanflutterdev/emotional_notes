@@ -7,27 +7,34 @@ class NotesRepository {
 
   NotesRepository(this._database);
 
-  Future<List<NoteWithEmotions>> getAllNotes() async {
-    final notes = await _database.select(_database.notes).join([
-      innerJoin(
-        _database.emotions,
-        _database.emotions.noteId.equalsExp(_database.notes.id),
-      ),
-    ]).get();
-
-    final Map<int, NoteWithEmotions> noteMap = {};
-
-    for (final row in notes) {
-      final note = row.readTable(_database.notes);
-      final emotion = row.readTable(_database.emotions);
-
-      if (!noteMap.containsKey(note.id)) {
-        noteMap[note.id] = NoteWithEmotions(note: note, emotions: []);
-      }
-      noteMap[note.id]!.emotions.add(emotion);
+  Future<List<NoteWithEmotions>> getAllNotes({String? tag}) async {
+    final query = _database.select(_database.notes);
+    if (tag != null) {
+      query.where((t) => t.tag.equals(tag));
     }
 
-    return noteMap.values.toList();
+    final notes = await query.get();
+    final noteWithEmotionsList = await Future.wait(
+      notes.map((note) async {
+        final emotions = await (_database.select(
+          _database.emotions,
+        )..where((t) => t.noteId.equals(note.id))).get();
+        return NoteWithEmotions(note: note, emotions: emotions, tag: note.tag);
+      }),
+    );
+
+    return noteWithEmotionsList;
+  }
+
+  Future<List<String>> getAllTags() async {
+    final tags = await _database.select(_database.notes).get();
+    final uniqueTags = tags
+        .map((note) => note.tag)
+        .where((tag) => tag != null)
+        .cast<String>()
+        .toSet()
+        .toList();
+    return uniqueTags;
   }
 
   Future<void> createNote(

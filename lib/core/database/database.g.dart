@@ -1,8 +1,8 @@
-
+// GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'database.dart';
 
-
+// ignore_for_file: type=lint
 class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -57,8 +57,23 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     requiredDuringInsert: false,
     defaultValue: currentDateAndTime,
   );
+  static const VerificationMeta _tagMeta = const VerificationMeta('tag');
   @override
-  List<GeneratedColumn> get $columns => [id, title, description, createdAt];
+  late final GeneratedColumn<String> tag = GeneratedColumn<String>(
+    'tag',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    title,
+    description,
+    createdAt,
+    tag,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -97,6 +112,12 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
     }
+    if (data.containsKey('tag')) {
+      context.handle(
+        _tagMeta,
+        tag.isAcceptableOrUnknown(data['tag']!, _tagMeta),
+      );
+    }
     return context;
   }
 
@@ -122,6 +143,10 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
+      tag: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tag'],
+      ),
     );
   }
 
@@ -136,11 +161,13 @@ class Note extends DataClass implements Insertable<Note> {
   final String title;
   final String? description;
   final DateTime createdAt;
+  final String? tag;
   const Note({
     required this.id,
     required this.title,
     this.description,
     required this.createdAt,
+    this.tag,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -151,6 +178,9 @@ class Note extends DataClass implements Insertable<Note> {
       map['description'] = Variable<String>(description);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || tag != null) {
+      map['tag'] = Variable<String>(tag);
+    }
     return map;
   }
 
@@ -162,6 +192,7 @@ class Note extends DataClass implements Insertable<Note> {
           ? const Value.absent()
           : Value(description),
       createdAt: Value(createdAt),
+      tag: tag == null && nullToAbsent ? const Value.absent() : Value(tag),
     );
   }
 
@@ -175,6 +206,7 @@ class Note extends DataClass implements Insertable<Note> {
       title: serializer.fromJson<String>(json['title']),
       description: serializer.fromJson<String?>(json['description']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      tag: serializer.fromJson<String?>(json['tag']),
     );
   }
   @override
@@ -185,6 +217,7 @@ class Note extends DataClass implements Insertable<Note> {
       'title': serializer.toJson<String>(title),
       'description': serializer.toJson<String?>(description),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'tag': serializer.toJson<String?>(tag),
     };
   }
 
@@ -193,11 +226,13 @@ class Note extends DataClass implements Insertable<Note> {
     String? title,
     Value<String?> description = const Value.absent(),
     DateTime? createdAt,
+    Value<String?> tag = const Value.absent(),
   }) => Note(
     id: id ?? this.id,
     title: title ?? this.title,
     description: description.present ? description.value : this.description,
     createdAt: createdAt ?? this.createdAt,
+    tag: tag.present ? tag.value : this.tag,
   );
   Note copyWithCompanion(NotesCompanion data) {
     return Note(
@@ -207,6 +242,7 @@ class Note extends DataClass implements Insertable<Note> {
           ? data.description.value
           : this.description,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      tag: data.tag.present ? data.tag.value : this.tag,
     );
   }
 
@@ -216,13 +252,14 @@ class Note extends DataClass implements Insertable<Note> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('description: $description, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('tag: $tag')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, title, description, createdAt);
+  int get hashCode => Object.hash(id, title, description, createdAt, tag);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -230,7 +267,8 @@ class Note extends DataClass implements Insertable<Note> {
           other.id == this.id &&
           other.title == this.title &&
           other.description == this.description &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.tag == this.tag);
 }
 
 class NotesCompanion extends UpdateCompanion<Note> {
@@ -238,29 +276,34 @@ class NotesCompanion extends UpdateCompanion<Note> {
   final Value<String> title;
   final Value<String?> description;
   final Value<DateTime> createdAt;
+  final Value<String?> tag;
   const NotesCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.description = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.tag = const Value.absent(),
   });
   NotesCompanion.insert({
     this.id = const Value.absent(),
     required String title,
     this.description = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.tag = const Value.absent(),
   }) : title = Value(title);
   static Insertable<Note> custom({
     Expression<int>? id,
     Expression<String>? title,
     Expression<String>? description,
     Expression<DateTime>? createdAt,
+    Expression<String>? tag,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (title != null) 'title': title,
       if (description != null) 'description': description,
       if (createdAt != null) 'created_at': createdAt,
+      if (tag != null) 'tag': tag,
     });
   }
 
@@ -269,12 +312,14 @@ class NotesCompanion extends UpdateCompanion<Note> {
     Value<String>? title,
     Value<String?>? description,
     Value<DateTime>? createdAt,
+    Value<String?>? tag,
   }) {
     return NotesCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
       createdAt: createdAt ?? this.createdAt,
+      tag: tag ?? this.tag,
     );
   }
 
@@ -293,6 +338,9 @@ class NotesCompanion extends UpdateCompanion<Note> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (tag.present) {
+      map['tag'] = Variable<String>(tag.value);
+    }
     return map;
   }
 
@@ -302,7 +350,8 @@ class NotesCompanion extends UpdateCompanion<Note> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('description: $description, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('tag: $tag')
           ..write(')'))
         .toString();
   }
@@ -633,6 +682,7 @@ typedef $$NotesTableCreateCompanionBuilder =
       required String title,
       Value<String?> description,
       Value<DateTime> createdAt,
+      Value<String?> tag,
     });
 typedef $$NotesTableUpdateCompanionBuilder =
     NotesCompanion Function({
@@ -640,6 +690,7 @@ typedef $$NotesTableUpdateCompanionBuilder =
       Value<String> title,
       Value<String?> description,
       Value<DateTime> createdAt,
+      Value<String?> tag,
     });
 
 final class $$NotesTableReferences
@@ -691,6 +742,11 @@ class $$NotesTableFilterComposer extends Composer<_$AppDatabase, $NotesTable> {
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get tag => $composableBuilder(
+    column: $table.tag,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -748,6 +804,11 @@ class $$NotesTableOrderingComposer
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get tag => $composableBuilder(
+    column: $table.tag,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$NotesTableAnnotationComposer
@@ -772,6 +833,9 @@ class $$NotesTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get tag =>
+      $composableBuilder(column: $table.tag, builder: (column) => column);
 
   Expression<T> emotionsRefs<T extends Object>(
     Expression<T> Function($$EmotionsTableAnnotationComposer a) f,
@@ -831,11 +895,13 @@ class $$NotesTableTableManager
                 Value<String> title = const Value.absent(),
                 Value<String?> description = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<String?> tag = const Value.absent(),
               }) => NotesCompanion(
                 id: id,
                 title: title,
                 description: description,
                 createdAt: createdAt,
+                tag: tag,
               ),
           createCompanionCallback:
               ({
@@ -843,11 +909,13 @@ class $$NotesTableTableManager
                 required String title,
                 Value<String?> description = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<String?> tag = const Value.absent(),
               }) => NotesCompanion.insert(
                 id: id,
                 title: title,
                 description: description,
                 createdAt: createdAt,
+                tag: tag,
               ),
           withReferenceMapper: (p0) => p0
               .map(

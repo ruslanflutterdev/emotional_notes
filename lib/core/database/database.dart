@@ -11,7 +11,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   static QueryExecutor _openConnection() {
     return driftDatabase(
@@ -21,4 +21,16 @@ class AppDatabase extends _$AppDatabase {
       ),
     );
   }
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (Migrator m) {
+      return m.createAll();
+    },
+    onUpgrade: (Migrator m, int from, int to) async {
+      if (from < 2) {
+        await m.addColumn(notes, notes.tag);
+      }
+    },
+  );
 }
